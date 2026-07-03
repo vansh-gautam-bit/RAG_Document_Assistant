@@ -1,43 +1,41 @@
-# from pathlib import Path
-
-# from fastapi import APIRouter, UploadFile, File
-
-# router =APIRouter(prefix="/upload", tags=["Upload"])
-
-# UPLOAD_DIR = Path("uploaded_docs")
-# UPLOAD_DIR.mkdir(exist_ok=True)
-
-# @router.post("/")
-# async def upload_files(files: list[UploadFile]= File(...)):
-
-#     uploaded = []
-
-#     for file in files:
-
-#         destination = UPLOAD_DIR / file.filename
-
-#         with open(destination, "wb") as f:
-#             f.write(await file.read())
-
-#         uploaded.append(file.filename)
-
-#         return {
-#             "message": "Files uploaded successfully",
-#             "files": uploaded,
-#         }    
-
+from pathlib import Path
 from typing import Annotated
+from app.services.loader import DocumentLoader
+from app.services.splitter import TextSplitter
 
-from fastapi import APIRouter, File, UploadFile
+from fastapi import APIRouter , File , UploadFile
 
-router = APIRouter(prefix="/upload", tags=["Upload"])
+router = APIRouter(prefix="/upload",tags=["Upload"])
 
+UPLOAD_DIR = Path("uploaded_docs")
+UPLOAD_DIR.mkdir(exist_ok=True)
 
 @router.post("/")
 async def upload_files(
-    files: Annotated[list[UploadFile], File(description="Upload files")]
+    files: Annotated[list[UploadFile],File(description="Upload files")]
 ):
+    uploaded = []
+
+    for file in files:
+        destination = UPLOAD_DIR / file.filename
+
+        with open(destination, "wb") as f:
+            f.write(await file.read())
+
+        documents = DocumentLoader.load_document(str(destination))
+
+        chunks =TextSplitter.split_documents(documents)
+
+        print("Total Chunks: {len(chunks)}")
+
+        for i, chunk in enumerate(chunks):
+            print(f"\nChunk {i + 1}")
+            print(chunk.page_content)
+
+        uploaded.append(file.filename)
+
     return {
-        "count": len(files),
-        "files": [f.filename for f in files],
-    }
+        "message" : "Files uploaded successfully",
+        "files":uploaded,
+    }        
+

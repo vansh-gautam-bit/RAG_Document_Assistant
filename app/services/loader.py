@@ -1,11 +1,6 @@
 from pathlib import Path
 
-from langchain_community.document_loaders import (
-    PyPDFLoader,
-    TextLoader,
-    Docx2txtLoader,
-    UnstructuredMarkdownLoader,
-)
+from langchain_community.document_loaders import PyPDFLoader, TextLoader, Docx2txtLoader, UnstructuredMarkdownLoader
 
 class DocumentLoader:
     
@@ -28,5 +23,5 @@ class DocumentLoader:
         else:
             raise ValueError(f"unsupported file type: {suffix}")  
 
-        return loader.load()             
+        return loader.load()       
 

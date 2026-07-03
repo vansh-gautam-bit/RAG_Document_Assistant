@@ -6,6 +6,6 @@ class EmbeddingModel:
     @staticmethod
     def get_embeddings():
         return GoogleGenerativeAIEmbeddings(
-            model=settings.GOOGLE_EMBEDDING_MODEL,
-            google_api_key=settings.GEMINI_API_KEY,
-        )
+    model=settings.GOOGLE_EMBEDDING_MODEL,
+    google_api_key=settings.GEMINI_API_KEY,
+)

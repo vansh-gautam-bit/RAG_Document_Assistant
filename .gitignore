@@ -14,8 +14,9 @@ env/
 # VS Code
 .vscode/
 
-# Chroma DB
-app/db/chroma_db/
+# FAISS DB
+app/db/faiss/*
+!app/db/faiss/.gitkeep
 
 # Uploaded documents
 uploaded_docs/

@@ -1,3 +1,4 @@
+from app.services.vectorstore import VectorStore
 from pathlib import Path
 from typing import Annotated
 from app.services.loader import DocumentLoader
@@ -24,13 +25,11 @@ async def upload_files(
 
         documents = DocumentLoader.load_document(str(destination))
 
-        chunks =TextSplitter.split_documents(documents)
+        chunks = TextSplitter.split_documents(documents)
 
-        print("Total Chunks: {len(chunks)}")
+        VectorStore.add_documents(chunks)
 
-        for i, chunk in enumerate(chunks):
-            print(f"\nChunk {i + 1}")
-            print(chunk.page_content)
+        print(f"{len(chunks)} chunks indexed successfully.")
 
         uploaded.append(file.filename)
 
